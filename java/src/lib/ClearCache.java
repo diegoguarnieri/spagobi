@@ -44,7 +44,7 @@ public class ClearCache {
                if(signature != null) {
                   if(limpaCacheBySignature(connBI, signature)) {
                      return true;
-                  }  
+                  }
                }
             }
          }
@@ -54,7 +54,7 @@ public class ClearCache {
       } finally {
          Conexao.close(rs, ps, connBI);
       }
-      
+
       throw new Exception("error cleaning cache");
    }
 }

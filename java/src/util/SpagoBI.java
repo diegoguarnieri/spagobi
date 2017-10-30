@@ -84,7 +84,7 @@ public class SpagoBI {
          Conexao.close(rs, ps);
       }
 
-      throw new Exception("Erro ao buscar a query");
+      throw new Exception("error on search query");
    }
    
    public static String getDatasetType(String configuration) throws Exception {
@@ -96,8 +96,8 @@ public class SpagoBI {
       } else if(obj1.containsKey("Query")) {
          return "query";
       }
-      
-      throw new Exception("DatasetType nao encontrado");
+
+      throw new Exception("DatasetType not find");
    }
 
    public static boolean limpaCacheBySignature(Connection conn, String signature) throws Exception {
@@ -122,12 +122,12 @@ public class SpagoBI {
 
          return true;
       } else {
-         throw new Exception("Nao foi possivel limpar o cache: " + signature);   
+         throw new Exception("could not clear cache: " + signature);
       }
    }
 
    private static String getCookieSpagoBI() throws Exception {
-      String uri = "http://192.168.2.134:8080/SpagoBI/";
+      String uri = "http://<<spagobi_ip_address>>:8080/SpagoBI/";
       URL url = new URL(uri);
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -140,12 +140,12 @@ public class SpagoBI {
          return cookie;
       } else {
          conn.disconnect();
-         throw new Exception("Nao foi possivel obter o cookie de sessao do SpagoBI- code: " + conn.getResponseCode());  
+         throw new Exception("could not get session cookie - code: " + conn.getResponseCode());  
       }
    }
 
    private static boolean login(String cookieSpagoBI, String user, String password) throws Exception {
-      String uri = "http://192.168.2.134:8080/SpagoBI/servlet/AdapterHTTP?PAGE=LoginPage&NEW_SESSION=TRUE";
+      String uri = "http://<<spagobi_ip_address>>:8080/SpagoBI/servlet/AdapterHTTP?PAGE=LoginPage&NEW_SESSION=TRUE";
       URL url = new URL(uri);
 
       String urlParameters = "isInternalSecurity=true&userID=" + user + "&password=" + password + "&x=0&y=0";
@@ -168,7 +168,7 @@ public class SpagoBI {
          return true;
       } else {
          conn.disconnect();
-         throw new Exception("Nao foi possivel efetuar login no SpagoBI - code: " + conn.getResponseCode());
+         throw new Exception("could not log in - code: " + conn.getResponseCode());
       }
    }
 
@@ -185,10 +185,10 @@ public class SpagoBI {
 
          conn.disconnect();
          return cookie;
-         
+
       } else {
          conn.disconnect();
-         throw new Exception("Nao foi possivel conectar ao SpagoBIQbeEngine - code: " + conn.getResponseCode());
+         throw new Exception("could not connect at SpagoBIQbeEngine - code: " + conn.getResponseCode());
       }
    }
 
@@ -210,18 +210,12 @@ public class SpagoBI {
       conn1.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
       conn1.setRequestProperty("charset", "utf-8");
       conn1.setRequestProperty("Content-Length", Integer.toString(postData.length));
-      //conn4.setRequestProperty("Referer", "http://192.168.2.134:8080/SpagoBIQbeEngine/servlet/AdapterHTTP?ACTION_NAME=BUILD_QBE_DATASET_START_ACTION&user_id=biadmin&NEW_SESSION=TRUE&SBI_LANGUAGE=en&SBI_COUNTRY=US&DATASOURCE_LABEL=bi&DATAMART_NAME=BM_HABILITACAO");
       conn1.setRequestProperty("Cookie", cookie);
       conn1.setUseCaches(false);
 
       conn1.getOutputStream().write(postData);
 
       conn1.getInputStream();
-
-      /*Reader in1 = new BufferedReader(new InputStreamReader(conn1.getInputStream(), "UTF-8"));
-      for(int i; (i = in1.read()) >= 0;) {
-         System.out.print((char) i);
-      }*/
 
       conn1.disconnect();
 
@@ -231,12 +225,12 @@ public class SpagoBI {
 
       String uri2 = "http://192.168.2.134:8080/SpagoBIQbeEngine/servlet/AdapterHTTP?ACTION_NAME=GET_SQL_QUERY_ACTION";
       URL url2 = new URL(uri2);
-      HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();           
+      HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection(); 
       conn2.setDoOutput(true);
       conn2.setInstanceFollowRedirects(false);
       conn2.setRequestMethod("POST");
       conn2.setRequestProperty("X-Requested-With", "XMLHttpRequest");
-      conn2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+      conn2.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
       conn2.setRequestProperty("charset", "utf-8");
       conn2.setRequestProperty("Content-Length", Integer.toString(postData.length));
       //conn5.setRequestProperty("Referer", "http://192.168.2.134:8080/SpagoBIQbeEngine/servlet/AdapterHTTP?ACTION_NAME=BUILD_QBE_DATASET_START_ACTION&user_id=biadmin&NEW_SESSION=TRUE&SBI_LANGUAGE=en&SBI_COUNTRY=US&DATASOURCE_LABEL=bi&DATAMART_NAME=BM_HABILITACAO");
@@ -274,7 +268,7 @@ public class SpagoBI {
 
    public static String getHashedSignature(String signature) throws Exception {
       MessageDigest messageDigest;
-      
+
       messageDigest = MessageDigest.getInstance("SHA-256");
       messageDigest.update(signature.getBytes("UTF-8"));
 
