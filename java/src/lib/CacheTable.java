@@ -42,7 +42,7 @@ public class CacheTable {
                String tableName = rs.getString("table_name");
 
                return tableName;
-            }  
+            }
          }
 
       } catch(Exception e) {
